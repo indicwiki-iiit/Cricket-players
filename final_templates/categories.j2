@@ -1,0 +1,27 @@
+
+{%- macro get_categories_list(player_role, birth_year, death_year, nationality, gender, played_ODI, played_test, played_t20) -%}
+    {{- "'''సూచన: పైన ఇవ్వబడిన వివరాలన్నీ 15 జూన్, 2021 తారీకున సంగ్రహించబడ్డాయి.'''" -}}
+    {{- "\n\n" -}}
+    {{- "[[వర్గం:క్రికెట్]]\n" -}}
+    {{- "[[వర్గం:క్రీడాకారులు]]\n" -}}
+    {{- "[[వర్గం:క్రికెట్ క్రీడాకారులు]]\n" -}}
+    {{- get_country_player(nationality, gender) -}}
+    {{- get_country_test_details(nationality, played_test, gender) -}}
+    {{- get_country_odi_details(nationality, played_ODI, gender) -}}
+    {{- get_country_t20_details(nationality, played_t20, gender) -}}
+    {{- get_wk_category(player_role) -}}
+    {%- if birth_year != -1 -%}
+        {{- "[[వర్గం:" ~ birth_year |string ~ " జననాలు" ~ "]]\n" -}}
+    {%- endif -%}
+    {%- if death_year != -1 -%}
+        {{- "[[వర్గం:" ~ death_year |string ~ " మరణాలు" ~ "]]\n" -}}
+    {%- else -%}
+        {{- "[[వర్గం:జీవిస్తున్న ప్రజలు]]\n" -}}
+    {%- endif -%}
+    {{- "\n" -}}
+    {{- "\n" -}}
+
+{%- endmacro -%}
+
+{{- "\n" -}}
+{{- get_categories_list(player_role, birth_year, death_year, nationality, gender, played_ODI, played_test, played_t20) -}}

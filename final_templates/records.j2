@@ -1,0 +1,200 @@
+
+{%- if gender == 'Male' -%}
+		{%- set word1 = 'సాధించాడు' -%}  
+		{%- set word2 = 'సొంతం చేసుకున్నాడు' -%} 
+		{%- set word3 = 'దక్కించుకున్నాడు' -%}
+		{%- set word4 = 'అందుకున్నాడు' -%}
+
+{%- else -%}
+		{%- set word1 = 'సాధించింది' -%}
+		{%- set word2 = 'సొంతం చేసుకుంది' -%}
+		{%- set word3 = 'దక్కించుకుంది' -%}
+		{%- set word4 = 'అందుకుంది' -%}
+	
+{%- endif -%}
+
+
+
+{%- macro allRecords(player_name, all_records)  -%}
+ 
+	{%- if all_records != '[]' -%}
+
+
+== రికార్డులు ==
+
+ {%- set line1 = [player_name,' ఈ క్రింది రికార్డులు ',word1] |join('') %}
+ {%- set line2 = ['ఈ క్రింది రికార్డులు ',player_name,' ',word2] |join('') %}
+ {%- set line3 = [player_name,' సాధించిన రికార్డులు'] |join('') %}
+
+{{ [line1, line2, line3] | random }}: 
+{{- get_matches_ref(references, player_name) }}
+(''క్రింది రికార్డులలో ఆ రికార్డు కు సంబందించిన గణాంకం చివరన ఇవ్వబడినది.'')
+
+<div style="overflow-y: scroll; overflow-x: hidden; max-height :40em;">
+
+{% for record in all_records -%}
+			 
+{{- loop.index}}. {{ record.strip() }}
+
+{% endfor -%}
+
+</div>
+
+	{%- endif -%}
+	 
+
+{%- endmacro -%}
+
+
+{%- macro testRecords(player_name, test_records)  -%}
+ 
+	{%- if test_records != '[]' %}
+
+== టెస్ట్ రికార్డులు ==
+
+{%- set line1 = [player_name,' టెస్ట్ క్రికెట్‌లో ఈ క్రింది రికార్డులు ',word1] |join('') %}
+{%- set line2 = ['టెస్ట్ క్రికెట్‌లో ఈ క్రింది రికార్డులు ',player_name,' ',word4] |join('') %}
+{%- set line3 = [player_name,' టెస్ట్ క్రికెట్‌లో అందుకున్న రికార్డులు'] |join('') %}
+
+{{ [line1, line2, line3] | random }}:
+(''క్రింది రికార్డులలో ఆ రికార్డు కు సంబందించిన గణాంకం చివరన ఇవ్వబడినది.'')
+
+<div style="overflow-y: scroll; overflow-x: hidden; max-height :40em;">
+
+{% for record in test_records -%}			 
+
+{{-loop.index}}. {{ record.strip() }}
+
+{% endfor -%}
+
+</div>
+
+	{%- endif -%}
+	 
+
+{%- endmacro -%}
+
+
+
+{%- macro odiRecords(player_name, odi_records)  -%}
+ 
+		{%- if odi_records != '[]' %}
+
+== వన్డే రికార్డులు ==
+
+{%- set line1 = [player_name,' వన్డే ఇంటర్నేషనల్‌లో ఈ క్రింది రికార్డులు ',word1] |join('') %}
+{%- set line2 = ['వన్డే ఇంటర్నేషనల్‌లో ఈ క్రింది రికార్డులు ',player_name,' ',word2] |join('') %}
+{%- set line3 = [player_name,' వన్డే ఇంటర్నేషనల్‌లో అందుకున్న రికార్డులు'] |join('') %}
+
+{{ [line1, line2, line3] | random }}:
+(''క్రింది రికార్డులలో ఆ రికార్డు కు సంబందించిన గణాంకం చివరన ఇవ్వబడినది.'')
+
+<div style="overflow-y: scroll; overflow-x: hidden; max-height :40em;">
+	 
+{% for record in odi_records -%}
+
+{{-loop.index}}. {{ record.strip() }}
+
+{% endfor -%}
+
+</div>
+
+	{%- endif -%}
+	 
+
+{%- endmacro -%}
+
+
+
+{%- macro t20iRecords(player_name, t20i_records)  -%}
+ 
+	{%- if t20i_records != '[]' %}
+
+== టీ20 రికార్డులు ==
+	 
+{%- set line1 = [player_name,' టి 20 లలో ఈ క్రింది రికార్డులు ',word2] |join('') %}
+{%- set line2 = ['టి 20 లలో ఈ క్రింది రికార్డులు ',player_name,' ',word4] |join('') %}
+{%- set line3 = [player_name,' టి 20 లలో అందుకున్న రికార్డులు '] |join('') %}
+
+{{ [line1, line2, line3] | random }}:
+(''క్రింది రికార్డులలో ఆ రికార్డు కు సంబందించిన గణాంకం చివరన ఇవ్వబడినది.'')  
+
+<div style="overflow-y: scroll; overflow-x: hidden; max-height :40em;">  
+
+{% for record in t20i_records -%}
+			 
+{{-loop.index}}. {{ record.strip() }}
+
+{% endfor -%}
+
+</div>
+
+	{%- endif -%}
+	 
+
+{%- endmacro -%}
+
+
+{%- macro function_awards(player_name, awards)  -%}
+
+	{%- if awards != 'nan' %}
+
+== పురస్కారాలు,  క్రీడా గౌరవాలు ==  
+
+{%- set line1 = [player_name,' ఈ క్రింది అవార్డులు ',word3] |join('') %}
+{%- set line2 = ['ఈ క్రింది అవార్డులు ',player_name,' ',word4] |join('') %}
+{%- set line3 = [player_name,' దక్కించుకున్న అవార్డులు'] |join('') %}
+
+{{ [line1, line2, line3] | random }}: <ref>[https://www.kaggle.com/raghav333/espn-cricket-players-data {{player_name}} పురస్కారాలు]</ref>
+
+<div style="overflow-y: scroll; overflow-x: hidden; max-height :40em;">
+
+{% for award in awards -%}
+
+{{-loop.index}}. {{ award.strip() }}
+
+{% endfor -%}
+
+</div>
+
+	{%- endif -%}
+
+
+{%- endmacro -%}
+
+
+{%- macro function_references(references)  -%}
+ 
+	{%- if references != 'nan' %}
+
+== మూలాలు ==
+
+{{'{{reflist}}'}}
+
+	{%- endif -%}
+	 
+
+{%- endmacro -%}
+
+
+
+
+
+{# Function Calls Below#}
+
+
+{{- allRecords(player_name, all_records) -}}
+
+{{- testRecords(player_name, test_records) -}}
+
+{{- odiRecords(player_name, odi_records) -}}
+
+{{- t20iRecords(player_name, t20i_records) -}}
+
+{{- function_awards(player_name, awards) -}}
+
+{{- function_references(references) -}}
+
+
+
+ 
