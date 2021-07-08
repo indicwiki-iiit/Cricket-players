@@ -1,3 +1,5 @@
+# Performs a final level data cleaning based on defects observed on dataset obtained after secondary level cleaning
+
 import pandas as pd
 import sweetviz as sv
 import json
@@ -7,7 +9,7 @@ import pickle
 a = pd.read_csv("cricket_players.csv", low_memory=False)
 all_attributes = a.columns.tolist()
 
-# lists - 
+# Converts string representation of lists into lists wherever necessary
 def list_attrs(attributes):
     global a
     for attribute in attributes:
@@ -20,7 +22,7 @@ def list_attrs(attributes):
                 continue
             a.at[i, attribute] = ast.literal_eval(a.at[i, attribute])
            
-# dicts - 
+# Converts string representation of dictionaries into dictionaries wherever necessary
 def dict_attrs(attributes):
     global a
     for attribute in attributes:
@@ -33,7 +35,7 @@ def dict_attrs(attributes):
                 continue
             a.at[i, attribute] = ast.literal_eval(a.at[i, attribute])
               
-# int - 
+# Converts numerical values present as strings into integers wherever needed, replacing by -1 wherever invalid values are encountered
 def to_int_attrs(attributes):
     global a
     for attribute in attributes:
@@ -46,7 +48,7 @@ def to_int_attrs(attributes):
                 continue
             a.at[i, attribute] = int(float(a.at[i, attribute]))
 
-# float -         
+# Converts numerical values present as strings into floats wherever needed, replacing by -1.0 wherever invalid values are encountered        
 def to_float_attrs(attributes):
     global a
     for attribute in attributes:
@@ -59,6 +61,7 @@ def to_float_attrs(attributes):
                 continue
             a.at[i, attribute] = float(a.at[i, attribute])
 
+# generalizing and collecting attribute names based on datatype
 sl = all_attributes[:5] + all_attributes[9:10] + all_attributes[19:20] + all_attributes[29:31] + all_attributes[41:43] + all_attributes[79:81] + all_attributes[118:120] + all_attributes[156:158] + all_attributes[213:215] + all_attributes[102:103] + all_attributes[135:136] + all_attributes[167:168] + all_attributes[186:187] + all_attributes[198:199] + all_attributes[228:229] + all_attributes[60:61] + all_attributes[53:56] + all_attributes[91:94] + all_attributes[125:132] + all_attributes[178:179] + all_attributes[221:224] + all_attributes[145:151]
 sl = sl + ["Gender", "Cricinfo_id", "AWARDS"]
 dl = all_attributes[90:91]
@@ -87,6 +90,7 @@ to_float_attrs(fl)
 a[il] = a[il].astype(int)
 a[fl] = a[fl].astype(float)
 
+# dropping sparse rows with less than 58 non-null values including all attributes (additional notability check)
 indices_to_drop = []
 
 for i, row in a.iterrows():
@@ -114,6 +118,7 @@ a.to_csv('cricket_players.csv', index=False)
 report = sv.analyze(a, pairwise_analysis='off')
 report.show_html()
 
+# Obtaining final cleaned dataset
 a = pd.read_csv("cricket_players.csv", low_memory=False)
 with open('cricket_players_DF.pkl', 'wb') as f:
     pickle.dump(a, f)

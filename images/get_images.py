@@ -1,3 +1,5 @@
+# Extracting english wikipedia article url for different players having a valid wikidata id
+
 import pandas as pd
 import sweetviz as sv
 import json
@@ -7,6 +9,7 @@ import wikipedia
         
 a = pd.read_csv('All_players_images.csv', low_memory=False)
 
+# Extract english wikipedia article url for a given player's wikidata id
 def get_wikipedia_url_from_wikidata_id(wikidata_id, lang='en', debug=False):
     import requests
     from requests import utils
@@ -46,6 +49,7 @@ def get_wikipedia_url_from_wikidata_id(wikidata_id, lang='en', debug=False):
 ids = a.cricinfoIdLabel.tolist()
 wiki_links = []
 
+# Extract english wikipedia article url for each player
 for i, cricketer_id in enumerate(ids):
     required_player = a.loc[a['cricinfoIdLabel'] == cricketer_id]
     if i % 100 == 0:

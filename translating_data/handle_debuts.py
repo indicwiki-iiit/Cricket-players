@@ -1,3 +1,5 @@
+# Rectifies mistakes in existing debut strings translation, and handles abbreviations in those sentences
+
 import pandas as pd
 import sweetviz as sv
 import pickle
@@ -22,11 +24,13 @@ month_names = {
     'September': 'సెప్టెంబర్', 'June': 'జూన్', 'August': 'ఆగస్టు', 'July': 'జూలై'
 }
 
+# Checks if given argument is indeed a valid string in the dataset
 def is_valid_string(attribute_value):
     if not isinstance(attribute_value, str):
         return True
     return not (attribute_value == None or pd.isnull(attribute_value) or str(attribute_value) == "" or str(attribute_value) == "nan")
 
+# Obtain transliterated output for a given input sentence, based on online libraries
 def getTransliteratedDescription(description):
     if not is_valid_string(description):
         return ''
@@ -42,6 +46,7 @@ def getTransliteratedDescription(description):
             pass
     return description
 
+# Converts an abbreviation filled with upper-case letters to corresponding readable telugu translation
 def change_abbr(h):
     alpha = {
         "A":"ఏ",      
@@ -73,6 +78,7 @@ def change_abbr(h):
     }
     return ''.join([alpha[i] + '.' for i in h])[:-1]
 
+# Hardcoding few short-hand notations (abbreviations)
 def get_token_translation(token):
     non_alphas = {
         "QuettaR": 'క్వెట్టా',
@@ -106,42 +112,7 @@ def get_token_translation(token):
         return non_alphas[token]
     return change_abbr(token)
 
-# all_vals = set()
-# team_names = set()
-# att = set()
-# vss = set()
-
-# def add_to_team_names(debb):
-#     global team_names
-#     global att
-#     global vss
-#     deb = debb.split(" ")
-#     team_1 = ""
-#     team_2 = ""
-#     vs_c = 0
-#     at_c = 0
-#     for j in range(len(deb)):
-#         if deb[j] == "vs":
-#             vs_c = j
-#             break
-#     for j in range(len(deb)):
-#         if deb[j] == "at":
-#             at_c = j
-#             break
-#     team_1 = ' '.join(deb[:vs_c])
-#     team_2 = ' '.join(deb[vs_c + 1:at_c])
-#     team_names.add(team_1)
-#     team_names.add(team_2)
-#     if "at" in team_1:
-#         att.add(team_1)
-#     if "at" in team_2:
-#         att.add(team_2)
-#     if "vs" in team_1:
-#         vss.add(team_1)
-#     if "vs" in team_2:
-#         vss.add(team_2)    
-    
-
+# Processes a sentence depicting debut information of player, and produces output after transliteration (few errors were rectified)
 def get_debut_string(deb):
     global month_names
     if not is_valid_string(deb) or deb == None or pd.isnull(deb):
@@ -173,7 +144,6 @@ def get_debut_string(deb):
 a = pd.read_csv("professional_life_trans.csv", low_memory=False)
 a.fillna(value="nan", inplace=True)
 cols = [c for c in a.columns.tolist() if "debut" in c.lower() and not "telugu" in c.lower()]
-# print(cols)
 
 for attribute in cols:
     print()

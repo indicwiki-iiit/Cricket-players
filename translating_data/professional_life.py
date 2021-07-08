@@ -1,3 +1,5 @@
+# Obtaining telugu contents for all attributes associated with professional life of a player
+
 import pandas as pd
 import pickle
 import translators as ts
@@ -15,13 +17,13 @@ req_str = "Cricinfo_id, Player_Name, Player_Name_Telugu, FC Matches_debut, FC Ma
 cols = req_str.split(', ')
 print(cols)
 
-
+# Checks if given argument is indeed a valid string in the dataset
 def is_valid_string(attribute_value):
     if not isinstance(attribute_value, str):
         return True
     return not (attribute_value == None or pd.isnull(attribute_value) or str(attribute_value) == "" or str(attribute_value) == "nan")
 
-
+# Obtain transliterated output for a given input sentence, based on online libraries
 def getTransliteratedDescription(description):
     try:
         current_attribute_value = description
@@ -35,7 +37,7 @@ def getTransliteratedDescription(description):
             pass
     return description
 
-
+# Obtain translated output for a given input sentence, based on online libraries
 def getTranslatedDescription(description):
     global translator
     if isinstance(description, str) and not is_valid_string(description):
@@ -53,10 +55,12 @@ def getTranslatedDescription(description):
                 return GoogleTranslator(source='en', target='te').translate(text=description)
             except:
                 return description
-
+            
+# Decides if the row corresponding to a particular cricket stat of a major trophy should be considered or not
 def can_consider_trophy_stat(stat_name, all_trophies):
     return len([ke for ke in all_trophies.keys() if stat_name in all_trophies[ke].keys() and is_valid_string(all_trophies[ke][stat_name])]) != 0
 
+# Returns translated trophy name
 def get_trophy_name(description):
     if not is_valid_string(description):
         return ''
@@ -80,7 +84,7 @@ def get_trophy_name(description):
         return getTransliteratedDescription(description)
     return trophy_translations[description]
 
-
+# Takes a list of trophies as an argument and returns a string with its translation
 def get_trophy_names_list(given_trophy_list):
     if not is_valid_string(given_trophy_list):
         return ''
@@ -89,7 +93,7 @@ def get_trophy_names_list(given_trophy_list):
         trophy_list[i] = get_trophy_name(trophy_list[i])
     return ', '.join(trophy_list)
 
-
+# Get all information related to major trophies the player played in
 def get_trophy_info(row):
     global all_attributes
     if not is_valid_string(row['Major_Trophies']):
@@ -120,7 +124,7 @@ def get_trophy_info(row):
         'tt', 'pr', 'hn', 'bbad']]
     return trophy_names, trophy_stat_names, trophy_details
 
-
+# Returns translated role of a given player
 def get_role(role):
     if not is_valid_string(role):
         return ''
@@ -140,7 +144,7 @@ def get_role(role):
         return role
     return role_map[role]
 
-
+# Returns translated nationality of a player
 def get_nationality(nation):
     nation = nation.strip()
     nations = {
@@ -190,7 +194,7 @@ def get_nationality(nation):
         return ''
     return nations[nation]
 
-
+# Processes a sentence depicting debut information of player, and produces output after transliteration and translation
 def get_debut_string(deb):
     # print(deb)
     if not is_valid_string(deb):
@@ -216,7 +220,7 @@ def get_debut_string(deb):
     partition += 3
     return getTransliteratedDescription(deb[:partition]) + getTranslatedDescription(deb[partition:])
 
-
+# Processes a sentence depicting list of teams in which the player played, and produces output after transliteration
 def get_teams_string(teams_list):
     if not is_valid_string(teams_list):
         return ''
@@ -291,7 +295,7 @@ def get_teams_string(teams_list):
                 print("Final level", g)
                 return ', '.join(actual_list)
 
-
+# Get value of a particular attribute for given player, after processing
 def get_db_val(row, attribute_name):
     if "debut" in attribute_name:
         attribute_name = attribute_name.replace('_Telugu', '')
@@ -308,7 +312,6 @@ def get_db_val(row, attribute_name):
             return ', '.join(trophy_names)
         return get_trophy_names_list(trophy_names)
     return get_teams_string(row['Teams'])
-
 
 with open('final_cricket_players_DF.pkl', 'rb') as f:
     cricket_players_DF = pickle.load(f)

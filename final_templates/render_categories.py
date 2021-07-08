@@ -1,3 +1,5 @@
+# Displays relevant categories for a given player based on his/her information
+
 import pickle
 import random
 import ast
@@ -6,6 +8,7 @@ import pandas as pd
 from functools import cmp_to_key
 
 all_attributes = []
+# Some basic hardcoding for format and country names
 famous_countries = {
     'India': 'భారతీయ', 
     'Australia': 'ఆస్ట్రేలియా', 
@@ -26,9 +29,11 @@ translated_names = {
     "List A": "లిస్ట్ ఏ"
 }    
 
+# Checks if given argument is indeed a valid string in the dataset
 def is_valid_string(attribute_value):
     return not (attribute_value == None or pd.isnull(attribute_value) or str(attribute_value) == "" or str(attribute_value) == "nan")
-            
+
+# Translates a player's nationality     
 def get_nationality(nation):
     nation = nation.strip()
     nations = {
@@ -77,7 +82,8 @@ def get_nationality(nation):
     if not nation in nations.keys():
         return ''
     return nations[nation]
-            
+
+# Extract year from a string representing a date (based on format in dataset)            
 def get_year(given_date):
     if not is_valid_string(given_date):
         return -1
@@ -88,7 +94,8 @@ def get_year(given_date):
         return int(given_date[-1][:5])
     except:
         return -1
-    
+
+# Outputs category based on player's nationality and gender
 def get_country_player(nationality, gender):
     global famous_countries
     country_string = get_nationality(nationality)
@@ -98,6 +105,7 @@ def get_country_player(nationality, gender):
         return "[[వర్గం:" + country_string + " మహిళా క్రికెట్ క్రీడాకారులు" + "]]\n"
     return "[[వర్గం:" + country_string + " క్రికెట్ క్రీడాకారులు" + "]]\n"
 
+# Outputs category if the player played atleast one test match for his country (category is also dependent on gender here)
 def get_country_test_details(nationality, played_test, gender):
     global famous_countries
     if not played_test:
@@ -108,7 +116,8 @@ def get_country_test_details(nationality, played_test, gender):
     if gender.startswith("F"):
         return "[[వర్గం:" + country_string + " మహిళా టెస్ట్ క్రికెట్ క్రీడాకారులు" + "]]\n"
     return "[[వర్గం:" + country_string + " టెస్ట్ క్రికెట్ క్రీడాకారులు" + "]]\n"
-    
+
+# Outputs category if the player played atleast one ODI match for his country (category is also dependent on gender here)
 def get_country_odi_details(nationality, played_ODI, gender):
     global famous_countries
     if not played_ODI:
@@ -120,6 +129,7 @@ def get_country_odi_details(nationality, played_ODI, gender):
         return "[[వర్గం:" + country_string + " మహిళా వన్డే క్రికెట్ క్రీడాకారులు" + "]]\n" + "[[వర్గం:వన్డే క్రికెట్ క్రీడాకారులు]]\n"
     return "[[వర్గం:" + country_string + " వన్డే క్రికెట్ క్రీడాకారులు" + "]]\n" + "[[వర్గం:వన్డే క్రికెట్ క్రీడాకారులు]]\n"
 
+# Outputs category if the player played atleast one T20 match for his country (category is also dependent on gender here)
 def get_country_t20_details(nationality, played_t20, gender):
     global famous_countries
     if not played_t20:
@@ -134,11 +144,13 @@ def get_country_t20_details(nationality, played_t20, gender):
         return "[[వర్గం:" + country_string + " మహిళా " + t20_f + " క్రికెట్ క్రీడాకారులు" + "]]\n" + "[[వర్గం:ట్వంటీ-20 క్రికెటర్లు]]\n"
     return "[[వర్గం:" + country_string + " " + t20_f + " క్రికెట్ క్రీడాకారులు" + "]]\n" + "[[వర్గం:ట్వంటీ-20 క్రికెటర్లు]]\n"
 
+# Outputs category if the player is a wicket-keeper
 def get_wk_category(player_role):
     if not player_role.startswith('W'):
         return ''
     return "[[వర్గం:వికెట్ కీపర్లు]]\n"
 
+# Extracts required information from player's row for obtaining template string
 def getData(row):
     data = {
         #{%- macro get_categories_list(player_role, birth_year, death_year, nationality, gender, played_ODI, played_test, played_t20) -%}
@@ -153,11 +165,13 @@ def getData(row):
 	}
     return data
 
+# Loads dataset
 cricket_players_DF = pd.DataFrame()
 with open('../data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:
     cricket_players_DF = pickle.load(f)
     cricket_players_DF.fillna(value="nan", inplace=True)
-    
+
+# Takes a player id as argument and returns corresponding template string associated with categories of that player
 def main6(_id):
     global all_attributes
     file_loader = FileSystemLoader('./')

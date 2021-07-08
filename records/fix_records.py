@@ -1,3 +1,5 @@
+# Script for translating records attribute of dataset
+
 import pandas as pd
 import pickle
 import ast
@@ -6,6 +8,7 @@ import json
 structures = {}
 categories = {}
 
+# Processes prefix of a record (typically the rank/position of a player in a particular list)
 def get_prefix(prefix):
     if prefix == '':
         return ''
@@ -17,6 +20,7 @@ def get_prefix(prefix):
             break
     return prefix[:non_num_idx] + ' వ స్థానం'
 
+# Processes suffix of a record (typically the stat value associated with the record)
 def get_suffix(suffix):
     if suffix == '':
         return ''
@@ -36,12 +40,14 @@ def get_suffix(suffix):
         s = s[:-1]
         return '(' + s + ' డిక్లేర్డ్)'
     return suffix
-    
+
+# Checks if given argument is indeed a valid string in the dataset      
 def is_valid_string(attribute_value):
     if not isinstance(attribute_value, str):
         return True
     return not (attribute_value == None or pd.isnull(attribute_value) or str(attribute_value) == "" or str(attribute_value) == "nan")
 
+# Handles records whose sentence formation depends upon gender of player
 def handle_gender(ele, gender):
     g = 0
     if gender == "Female":
@@ -52,6 +58,7 @@ def handle_gender(ele, gender):
         ele = ele.replace(replace_english[j], telugu_words[j].split('/')[g])
     return ele
 
+# Creates dictionary for assisting in hardcoding of translated unique sentence structures
 def create_dicts():
     global structures
     global categories
@@ -69,7 +76,8 @@ def create_dicts():
         categories[row['English']] = row['Category']
     structures[' 99 not out (and 199, 299 etc) '] = '99 నాట్ అవుట్ (199, 299 ఎట్సిట్రా) గా నిలిచినా ఆటగాళ్ల'
     categories[' 99 not out (and 199, 299 etc) '] = 'Both rank and statistic present'
-    
+
+# Extracting prefix (rank), suffix (stat) and structure of a given record sentence
 def get_sentence(ele):
     current_val = ele.split(" ")
     if len(current_val) == 0:
@@ -87,6 +95,7 @@ def get_sentence(ele):
     suffix = ele[end_index:]
     return prefix, structure, suffix
 
+# Obtaining the completely processed and translated record sentence (sometimes dependent on gender)
 def get_transformed_record(ele, gender):
     global structures
     global categories
@@ -114,6 +123,7 @@ a.drop(columns=["Player_Name_Telugu","References"], inplace=True)
 a.fillna(value="nan", inplace=True)
 create_dicts()
 
+# Replacing existing telugu translated columns in dataset with this automated and better-quality translation output
 for j in range(4):
     attribute = english_cols[j]
     for i, row in a.iterrows():

@@ -1,3 +1,5 @@
+# Displays relevant professional life details for a given player based on his/her information
+
 import pickle
 import random
 import ast
@@ -12,6 +14,7 @@ month_names = {
     'September': 'సెప్టెంబర్', 'June': 'జూన్', 'August': 'ఆగస్టు', 'July': 'జూలై'
 }
 
+# Hardcoding for displaying stats in table based on their priority index
 bat_stat_order = {
     "Mat": 1,
     "Inns": 2,
@@ -45,6 +48,7 @@ bowl_stat_order = {
     "10w": 13
 }
 
+# Hardcoding few common stat names for display
 translated_names = {
     'rn': "పరుగులు",
     'bta': "సగటు బ్యాటింగ్ స్కోరు",
@@ -98,12 +102,13 @@ translated_names = {
     "List A": "లిస్ట్ ఏ"
 }
 
-
+# Checks if given argument is indeed a valid string in the dataset
 def is_valid_string(attribute_value):
     if not isinstance(attribute_value, str) and not isinstance(attribute_value, float) and not isinstance(attribute_value, type(None)):
         return True
     return not (attribute_value == None or pd.isnull(attribute_value) or str(attribute_value) == "" or str(attribute_value) == "nan")
 
+# Returns translated trophy name
 def get_trophy_name(description):
     if not is_valid_string(description) or description == None or pd.isnull(description):
         return ''
@@ -128,7 +133,7 @@ def get_trophy_name(description):
     }
     return trophy_translations[description]
 
-
+# Returns translated nationality of a player
 def get_nationality(nation):
     nation = nation.strip()
     nations = {
@@ -178,7 +183,7 @@ def get_nationality(nation):
         return ''
     return nations[nation]
 
-
+# Takes a list of trophies as an argument and returns a string with its translation
 def get_trophy_names_list(given_trophy_list):
     if not is_valid_string(given_trophy_list):
         return ''
@@ -187,7 +192,7 @@ def get_trophy_names_list(given_trophy_list):
         trophy_list[i] = get_trophy_name(trophy_list[i])
     return ', '.join(trophy_list)
 
-
+# Returns a url corresponding to details related to given player's debut matches
 def get_matches_ref(all_ref, player_name):
     if not is_valid_string(all_ref):
         return ''
@@ -196,7 +201,7 @@ def get_matches_ref(all_ref, player_name):
         return ''
     return "<ref>[" + required_ref[0] + " " + player_name.strip() + " మ్యాచ్‌లు]</ref>"
 
-
+# Returns a url corresponding to details related to given player's stats in batting, bowling, fielding
 def get_stats_ref(all_ref, player_name):
     if not is_valid_string(all_ref):
         return ''
@@ -205,7 +210,7 @@ def get_stats_ref(all_ref, player_name):
         return ''
     return "<ref>[" + required_ref[0] + " " + player_name.strip() + " గణాంకాలు]</ref>"
 
-
+# Processes given stat and returns appropriate response by altering it if necessary
 def stat_value(attribute_name, attribute_value):
     if not is_valid_string(attribute_value) or attribute_value == None or pd.isnull(attribute_value):
         return "-"
@@ -215,32 +220,33 @@ def stat_value(attribute_name, attribute_value):
         return "-"
     return attribute_value
 
-
+# Comparator for displaying stats based on priority index
 def bat_comparator(a, b):
     global bat_stat_order
     if bat_stat_order[a] > bat_stat_order[b]:
         return 1
     return -1
 
-
+# Method for displaying stats based on priority index
 def get_bat_atts_sorted(bat_stats_list):
     return sorted(bat_stats_list, key=cmp_to_key(bat_comparator))
 
-
+# Comparator for displaying stats based on priority index
 def bowl_comparator(a, b):
     global bowl_stat_order
     if bowl_stat_order[a] > bowl_stat_order[b]:
         return 1
     return -1
 
-
+# Method for displaying stats based on priority index
 def get_bowl_atts_sorted(bowl_stats_list):
     return sorted(bowl_stats_list, key=cmp_to_key(bowl_comparator))
 
-
+# dummy function
 def print_names(li):
     return (li)
 
+# Returns translated role of a given player
 def get_role(role):
     if not is_valid_string(role) or role == None or pd.isnull(role):
         return ''
@@ -260,13 +266,13 @@ def get_role(role):
         return role
     return role_map[role]
 
-
+# randomly shuffles a given list
 def shuffle_list(given_list):
     result = list(given_list)
     random.shuffle(result)
     return result
 
-
+# Returns a sentence based on available batting stats
 def batting_description_func(first_word, gender_pronoun_2, num1, num2):
     if num1 <= 0 and num2 <= 0:
         return ''
@@ -276,7 +282,7 @@ def batting_description_func(first_word, gender_pronoun_2, num1, num2):
         return (first_word + ' ' + gender_pronoun_2 + ' సగటు స్కోరు ' + str(num1) + '. ')
     return (first_word + ' ' + gender_pronoun_2 + ' స్ట్రైక్ రేట్ ' + str(num2) + '. ')
 
-
+# Returns a sentence based on available bowling stats
 def bowling_description_func(first_word, gender_pronoun_2, num1, num2):
     if num1 <= 0 and num2 <= 0:
         return ''
@@ -286,7 +292,7 @@ def bowling_description_func(first_word, gender_pronoun_2, num1, num2):
         return (first_word + ' ' + gender_pronoun_2 + ' సగటు బౌలింగ్ స్కోరు ' + str(num1) + '. ')
     return (first_word + ' ' + gender_pronoun_2 + ' ఎకానమీ రేట్ ' + str(num2) + '. ')
 
-
+# Introductory sentence for a player's batting/bowling career information
 def opening_sentence(first_word, player_name, num1, num2, has_played):
     if num1 <= 0 and num2 <= 0:
         return ''
@@ -302,7 +308,7 @@ def opening_sentence(first_word, player_name, num1, num2, has_played):
         return (first_word + ' ' + player_name + ' ' + str(num1) + ' ' + match_word + ' ' + has_played + '. ')
     return (first_word + ' ' + player_name + ' ' + str(num2) + ' ' + innings_word + ' ' + has_played + '. ')
 
-
+# Returns a sentence based on available batting stats
 def batting_sent1(gender_pronoun_1, sum_batting_100s, sum_batting_50s, has_done):
     if sum_batting_100s <= 0 and sum_batting_50s <= 0:
         return ''
@@ -318,7 +324,7 @@ def batting_sent1(gender_pronoun_1, sum_batting_100s, sum_batting_50s, has_done)
         return ('అన్ని ఫార్మాట్లు కలిపి ' + gender_pronoun_1 + ' ' + str(sum_batting_100s) + ' ' + hundred_word + ' ' + has_done + '. ')
     return ('అన్ని ఫార్మాట్లు కలిపి ' + gender_pronoun_1 + ' ' + str(sum_batting_50s) + ' ' + fifty_word + ' ' + has_done + '. ')
 
-
+# Returns a sentence based on available bowling stats
 def bowling_sent1(gender_pronoun_1, sum_bowling_balls, has_done, sum_wickets, has_taken):
     if sum_bowling_balls <= 0 and sum_wickets <= 0:
         return ''
@@ -337,7 +343,7 @@ def bowling_sent1(gender_pronoun_1, sum_bowling_balls, has_done, sum_wickets, ha
         return ('తన కెరీర్ లో, ' + gender_pronoun_1 + ' మొత్తం ' + str(sum_bowling_balls) + ' ' + balls_word + ' (' + str(sum_bowling_balls//6) + ' ' + overs_word + ') బౌలింగ్ ' + has_done + '. ')
     return ('తన కెరీర్ లో ' + str(sum_wickets) + ' ' + wickets_word + ' ' + has_taken + '. ')
 
-
+# Returns a sentence based on available bowling stats
 def bowling_sent2(gender_pronoun_2, gender_pronoun_1, bowling_10w_test, bowling_10w_FC, has_taken):
     if bowling_10w_test <= 0 and bowling_10w_FC <= 0:
         return ''
@@ -353,7 +359,7 @@ def bowling_sent2(gender_pronoun_2, gender_pronoun_1, bowling_10w_test, bowling_
         return (gender_pronoun_2 + ' కెరీర్లో, ' + gender_pronoun_1 + ' ' + str(bowling_10w_test) + ' ' + test_word + ' 10 వికెట్లు ' + has_taken + '. ')
     return (gender_pronoun_2 + ' కెరీర్లో, ' + gender_pronoun_1 + ' ' + str(bowling_10w_FC) + ' ' + fc_word + ' 10 వికెట్లు ' + has_taken + '. ')
 
-
+# Returns translated output of given stat
 def get_translation(word, prefix_string):
     global translated_names
     if not is_valid_string(word) or word == None or pd.isnull(word):
@@ -370,14 +376,14 @@ def get_translation(word, prefix_string):
         return "సగటు బౌలింగ్ స్కోరు"
     return translated_names[word]
 
-
+# Checks if given attribute is in given list
 def null_check(given_list, given_att):
     for element in given_list:
         if '_' + element + '_' in given_att:
             return True
     return False
 
-
+# Decides if the row corresponding to a particular cricket format should be considered or not
 def can_be_considered_1(attributes, prop_name, row, curr_att):
     req_attrs = [a for a in attributes if '_' + prop_name + '_' in a]
     req_list = [a for a in req_attrs if (isinstance(row[a], str) and is_valid_string(row[a])) or (
@@ -385,7 +391,7 @@ def can_be_considered_1(attributes, prop_name, row, curr_att):
     valids_count = len(req_list)
     return valids_count != 0
 
-
+# Decides if the row corresponding to a particular cricket stat should be considered or not
 def can_be_considered_2(attributes, prop_name, row, curr_att, other_list):
     req_attrs = [
         a for a in attributes if prop_name in a and null_check(other_list, a)]
@@ -394,7 +400,7 @@ def can_be_considered_2(attributes, prop_name, row, curr_att, other_list):
     valids_count = len(req_list)
     return valids_count != 0
 
-
+# Get all relevant batting information about the player
 def get_batting_info(row):
     global all_attributes
     bat_attributes = [att for att in all_attributes if "Batting_" in att and (
@@ -424,7 +430,7 @@ def get_batting_info(row):
             batting_details[attribute_name] = row[attribute_name]
     return batting_format_names, batting_stat_names, batting_details
 
-
+# Get all relevant bowling information about the player
 def get_bowling_info(row):
     global all_attributes
     bowl_attributes = [
@@ -454,7 +460,7 @@ def get_bowling_info(row):
             bowling_details[attribute_name] = row[attribute_name]
     return bowling_format_names, bowling_stat_names, bowling_details
 
-
+# Get all relevant fielding information about the player
 def get_fielding_info(row):
     global all_attributes
     field_attributes = [att for att in all_attributes if "Batting_" in att and (
@@ -481,7 +487,7 @@ def get_fielding_info(row):
             fielding_details[attribute_name] = row[attribute_name]
     return fielding_format_names, fielding_stat_names, fielding_details
 
-
+# Decides if the row corresponding to a particular cricket stat of a major trophy should be considered or not
 def can_consider_trophy_stat(stat_name, all_trophies):
     valid_entries = [all_trophies[ke][stat_name] for ke in all_trophies.keys() if stat_name in all_trophies[ke].keys() and is_valid_string(
         all_trophies[ke][stat_name]) and not (all_trophies[ke][stat_name] == None or pd.isnull(all_trophies[ke][stat_name]))]
@@ -490,7 +496,7 @@ def can_consider_trophy_stat(stat_name, all_trophies):
     # print(valid_entries)
     return len(valid_entries) != 0
 
-
+# Get all information related to major trophies the player played in
 def get_trophy_info(row):
     global all_attributes
     if not is_valid_string(row['Major_Trophies']) or row['Major_Trophies'] == None or pd.isnull(row['Major_Trophies']):
@@ -521,7 +527,7 @@ def get_trophy_info(row):
         'tt', 'pr', 'hn', 'bbad']]
     return trophy_names, trophy_stat_names, trophy_details
 
-
+# Perform some calculations on player attributes and return some statistics for analysis and display
 def get_description_sums(row):
     global all_attributes
 
@@ -581,7 +587,7 @@ def get_description_sums(row):
 
     return sum_batting_matches, sum_batting_innings, sum_batting_runs, sum_batting_100s, sum_batting_50s, sum_dismissals, sum_catches, sum_stumpings, sum_bowling_matches, sum_bowling_innings, sum_bowling_balls, sum_wickets
 
-
+# Get career start year of player
 def get_start_year(span):
     if not is_valid_string(span) or span == None or pd.isnull(span):
         return -1
@@ -591,7 +597,7 @@ def get_start_year(span):
     except:
         return -1
 
-
+# Verify if the player has stopped playing cricket
 def did_retire(span):
     if not is_valid_string(span) or span == None or pd.isnull(span):
         return False
@@ -601,7 +607,7 @@ def did_retire(span):
     except:
         return False
 
-
+# Converts an abbreviation filled with upper-case letters to corresponding readable telugu translation
 def change_abbr(h):
     alpha = {
         "A": "ఏ",
@@ -633,7 +639,7 @@ def change_abbr(h):
     }
     return ''.join([alpha[i] + '.' for i in h])[:-1]
 
-
+# Hardcoding few short-hand notations (abbreviations)
 def get_token_translation(token):
     non_alphas = {
         "QuettaR": 'క్వెట్టా',
@@ -667,6 +673,7 @@ def get_token_translation(token):
         return non_alphas[token]
     return change_abbr(token)
 
+# Extracts required information from player's row for obtaining template string
 def getData(row):
     batting_format_names, batting_stat_names, batting_details = get_batting_info(
         row)
@@ -770,7 +777,8 @@ with open('../data_collection/data/final_cricket_players_translated_dataset_with
     cricket_players_DF = pickle.load(f)
     cricket_players_DF.fillna(value="nan", inplace=True)
     all_attributes = cricket_players_DF.columns.tolist()
-    
+
+# Takes a player id as argument and returns corresponding template string associated with professional life of that player  
 def main3(_id):
     global all_attributes
     file_loader = FileSystemLoader('./')

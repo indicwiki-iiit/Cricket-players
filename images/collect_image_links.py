@@ -1,8 +1,11 @@
+# Extracting image links for players with a valid english wikipedia article
+
 import csv
 import pandas as pd
 from bs4 import BeautifulSoup as bf
 import requests
 
+# Extract image link from infobox given a player's english wikipedia article's url
 def get_image_link(page_url):
     if page_url == None or page_url == "nan":
         return ""
@@ -24,6 +27,7 @@ a = pd.read_csv('All_players_images.csv', low_memory=False)
 image_links = []
 ids = a.cricinfoIdLabel.tolist()
 
+# Obtain image link for each player based on cricinfo_id
 for i, cricketer_id in enumerate(ids):
     required_player = a.loc[a['cricinfoIdLabel'] == cricketer_id]
     if i % 100 == 0:
