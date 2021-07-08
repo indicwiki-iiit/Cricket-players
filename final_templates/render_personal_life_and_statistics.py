@@ -3,12 +3,6 @@ import pandas as pd
 import numpy as np
 import ast 
 import pickle
-#from deeptranslit import DeepTranslit
-#trans = DeepTranslit('telugu')
-#from google.transliteration import transliterate_word , transliterate_text
-#f3rom google_trans_new import google_translator
-#translator = google_translator()
-
 
 def translate(var):
     res = list()
@@ -35,22 +29,26 @@ def translate(var):
         else:
             res.append(var[i])
     return res
+#Return the data with the converted data type based upon the syntax tree evalution of the source variable. 
 def conv(t):
     literal = ast.literal_eval(t)
     return literal
+#Add interwiki link sytax to specific data. 
 def interwiki(li):
     li = ast.literal_eval(li)
     ret = ""
     for i in range(len(li)):
-        ret = ret + "[[" + transliterate_text(li[i],lang_code="te") + "]],"
-        
+        ret = ret + "[[" + transliterate_text(li[i],lang_code="te") + "]],"  
     return ret
+#Add interwiki link sytax to string which contain date as a part of it. 
 def inter_wiki_date(li):
     li = ast.literal_eval(li)
     ret = ""
     for i in range(len(li)):
         ret = ret + "[[" + li[i] + "]],"
     return ret[0:-1]
+
+#Handle list to string converstion for rendering the data. 
 def list_str(val,check_year):
     if(check_year == 2):
         p = inter_wiki_date(val)
@@ -66,11 +64,13 @@ def list_str(val,check_year):
         p = p.replace(", (","(")
         p = p.replace("( ","(")
     return p
+#To handle the missing values and recognizing them
 def nan_check(x):
     if(x == -1 or x == "nan" or x == "-1"):
         return "-"
     else:
         return x
+#Based upon certain conditions a row within the statistics table need to be dropped ,i.e if all the row values are "nan" , etc. 
 def drop_row(dataset,e):
     row_drop = list()
     for i in range(15):
@@ -81,20 +81,21 @@ def drop_row(dataset,e):
         elif(len(p) == 1 and 0 in p):
             row_drop.append(i)
     return row_drop
-
+#Based upon the table data the heading of the table also need to be managed.Few headings might need to be excluded i.e if whole column is "nan".
 def head_filter(l_1 , l_2):
     fin_l =list()
     for j in range(len(l_2)):
         if(j not in l_1):
             fin_l.append(l_2[j])
     return fin_l
+#To handle abbrevations, a dict map for each english alphabet and string search for values which contain english alphabet and replace them with correponding telugu dict value.
 def change_abbr(h):
     alpha= {
     "A":"ఏ",      
     "B":"బీ",
     "C":"సీ",  
     "D":"డి",
-    "E":"ఇ",
+    "E":"ఈ",
     "F":"ఎఫ్",
     "G":"జీ",
     "H":"హెచ్",
@@ -124,6 +125,7 @@ def change_abbr(h):
         else:
             n = n+ h[i]
     return n
+#To convert relations attribute and render them.
 def relation_print(li):
     ret = ast.literal_eval(li)
     s= ""
@@ -134,6 +136,8 @@ def relation_print(li):
     else:
         s = s+ "."
     return s
+#Main function to handle the table values and filter based upon specific conditions.
+#Droping columns if all values are "nan" , other edge case handling
 def table_check(data):
     one = 0
     two = 0
@@ -166,12 +170,13 @@ def check(tag_name,v,b,c):
         c = nan_check(c)
         val = "| " +str(tag_name)+ " || " + str(v) + " || " + str(b) + " || " + str(c) + " |"
         return val
+#Render data for few attributes based upon the stats value with singular and plural suffix.
 def sing_plu(v):
     if(v > 1):
         return "లు "
     else:
         return " "
-
+#To include listed python functions as helper functions for the j2 renderer.
 func_dict = {
     "check": check,
     "list_str":list_str,
@@ -186,7 +191,7 @@ func_dict = {
     "relation_print":relation_print
 }
 
-lis_id = [53783]
+
 a = pd.DataFrame()
 with open('../data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:
     a = pickle.load(f)
