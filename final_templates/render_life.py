@@ -769,7 +769,8 @@ cricket_players_DF = pd.DataFrame()
 with open('../data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:
     cricket_players_DF = pickle.load(f)
     cricket_players_DF.fillna(value="nan", inplace=True)
-
+    all_attributes = cricket_players_DF.columns.tolist()
+    
 def main3(_id):
     global all_attributes
     file_loader = FileSystemLoader('./')

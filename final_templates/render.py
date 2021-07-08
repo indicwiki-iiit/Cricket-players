@@ -12,8 +12,9 @@ with open('../data_collection/data/final_cricket_players_translated_dataset_with
     # ids = cricket_players_DF.Cricinfo_id.tolist()
     # ids for 20 cricketers chosen
     ids = [52910, 10696, 47478, 52672, 665053, 5692, 44024, 51487, 318845, 53116, 5390, 277906, 267192, 54545, 55150, 769517, 53448, 215501, 275487, 54273]
+    # ids = [28081]
     # change below file_name to cricket_players.txt to store rendered output in txt file like previously done
-    file_name = 'cricket_players_20.xml'
+    file_name = 'cricket_players_(20).xml'
     with open(file_name, 'w') as fobj:
         # for xml file, uncomment below line
         fobj.write(tewiki + '\n')
