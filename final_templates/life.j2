@@ -100,6 +100,7 @@
     {%- endif -%}
     {{- get_stats_ref(all_ref, player_name) -}}
     {{- "\n" -}}
+    {{- "\n" -}}
 {%- endmacro -%}
 
 {%- macro batting_description(player_name, sum_batting_matches, sum_batting_innings, sum_batting_runs, sum_batting_100s, 
@@ -123,10 +124,6 @@
     {%- for elem in details -%}
         {{- elem -}}
     {%- endfor -%}
-    {%- if (opening_sent |length > 0 or sum_batting_runs > 0 or batting_s1 |length > 0 or line1 |length > 0 or line2 |length > 0 or 
-            line3 |length > 0) and not (batting_format_names |length > 0 and batting_stat_names |length > 0) -%} 
-        {{- "\n" -}}
-    {%- endif -%}
 {%- endmacro -%}
 
 {%- macro display_table(player_name, horizontal_headings, stat_names, table_details, table_name, horizontal_headings_description, prefix_string, is_trophy_table, first_word) -%}
@@ -229,9 +226,6 @@
             {%- endif -%}
             {{- line -}}        
         {%- endif -%}
-        {%- if not (fielding_format_names |length > 0 and fielding_stat_names |length > 0) -%}
-            {{- "\n" -}}
-        {%- endif -%}
     {%- endif -%}
 {%- endmacro -%}
 
@@ -251,10 +245,6 @@
     {%- endfor -%}
     {%- set bowling_s2 = bowling_sent2(gender_pronoun_4, gender_pronoun_1, bowling_10w_test, bowling_10w_FC, has_clinched) -%}
     {{- bowling_s2 -}}
-    {%- if (opening_sent |length > 0 or bowling_s2 |length > 0 or bowling_s1 |length > 0 or line1 |length > 0 or line2 |length > 0 or 
-            line3 |length > 0) and not (bowling_format_names |length > 0 and bowling_stat_names |length > 0) -%} 
-        {{- "\n" -}}
-    {%- endif -%}
 {%- endmacro -%}
 
 {%- macro trophy_description(player_name, major_trophy_and_championship_names) -%}
