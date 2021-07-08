@@ -1,3 +1,7 @@
+'''this info_overview.py file gets the telugu translations of
+attributes in InfoBox and overview section of cricket players domain'''
+
+# Importing all necessary libraries
 import pandas as pd
 import pickle
 import translators as ts
@@ -13,12 +17,16 @@ print(cols)
 translator = google_translator()
 trans = DeepTranslit('telugu').transliterate
 all_attributes = []
+
+
+# This function checks whether the given input is a valid one(Not nan)
 def is_valid_string(attribute_value):
     if not isinstance(attribute_value, str):
         return True
     return not (attribute_value == None or pd.isnull(attribute_value) or str(attribute_value) == "" or str(attribute_value) == "nan")
 
 
+# This function Transliterates the given input by using deep translit and other transliteration libraries.
 def getTransliteratedDescription(description):
     if not is_valid_string(description):
         return ''
@@ -34,7 +42,7 @@ def getTransliteratedDescription(description):
             pass
     return description
 
-
+# This function translates the given input by using Google trans new and other translation libraries.
 def getTranslatedDescription(description):
     global translator
     if isinstance(description, str) and not is_valid_string(description):
@@ -53,6 +61,7 @@ def getTranslatedDescription(description):
             except:
                 return description
 
+# Gets interlinks for Birthplace of the player
 def interLinks_for_place(birth_place,countries):
     if not is_valid_string(birth_place):
         return ''
@@ -78,6 +87,7 @@ def interLinks_for_place(birth_place,countries):
         li = ']],[['.join(place)
         return "[["+li+"]]"
 
+# Gives Transliterated death place and death date of the player(including age)
 def translate_death(row):
     if not is_valid_string(row):
         return ''
@@ -109,6 +119,7 @@ def translate_death(row):
     else:
         return getTransliteratedDescription(row)
 
+# Results Translated age of the player
 def Age_translation(age):
     if not is_valid_string(age):
         return ''
@@ -119,6 +130,8 @@ def Age_translation(age):
         age = age.replace('y'," సంవత్సరాలు")
     return age
 
+'''This functions results Home teams of the player(max 6) by considering the nationality of the player
+If the home teams are less than 6 it results the other teams(max 6 only)'''
 def teams6(tea,Nationality):
     Iteam = []
     NonIteam = []
@@ -137,6 +150,7 @@ def teams6(tea,Nationality):
     else:
         return li[:6]
 
+# Takes a list of team names as input, results the transliterated output of the input
 def get_teams_string(teams_list,Nationality):
     if not is_valid_string(teams_list):
         return ''
@@ -210,7 +224,7 @@ def get_teams_string(teams_list,Nationality):
             except Exception as g:
                 print("Final level", g)
                 return ', '.join(actual_list)
-
+# Takes a list of Awards of the player as input, results the transliterated output of the input
 def get_awards(teams_list):
     if not is_valid_string(teams_list):
         return ''
@@ -272,6 +286,7 @@ def get_awards(teams_list):
                 print("Final level", g)
                 return ',, '.join(actual_list)
 
+# Results the translated Height of the player
 def translate_height(height):
     if not is_valid_string(height):
         return ''
@@ -285,6 +300,8 @@ def translate_height(height):
         
     
     return height
+
+# Function takes a debut or last appearance match of the player as input string, Results date, year, opponent team of the match
 
 def spliting(row):
     if not is_valid_string(row):
@@ -301,6 +318,7 @@ def spliting(row):
         final.append(getTranslatedDescription(i.strip()))
     return final
 
+# Calls the above funtions as per the attribute.
 def get_db_val(row, attribute_name):
     countries = ['Japan', 'Namibia', 'Argentina', 'Singapore', 'Austria', 'U.A.E.', 'Belgium', 'Scotland', 'Italy', 'Zimbabwe', 'South Africa', 'Germany', 'E&C Africa', 'Malaysia', 
     'Sri Lanka', 'Oman', 'Australia', 'Bangladesh', 'Uganda', 'Chile', 'West Indies', 'India', 'Hong Kong', 'Denmark', 'P.N.G.', 'Nepal', 'Pakistan', 'Fiji', 'Cayman Is', 
