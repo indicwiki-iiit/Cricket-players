@@ -87,6 +87,3 @@ def main5(_id):
 	row = cricketDF.loc[cricketDF['Cricinfo_id'] == _id]
 	return template.render(getData(row))
 
-
-
-
