@@ -40,9 +40,8 @@ tewiki = '''<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.10/" xmlns:x
 	</siteinfo>\n'''
 
 # Global Variables
-page_id = 900000
 
-user_id ="tgv2002"
+user_id ="18193"
 username ="Gokul Vamsi"
 
 # Funtions to write page to file object
@@ -59,7 +58,17 @@ def sha36(page_id):
 	
 	return ''.join(reversed(chars))
 
-def writePage(title, wikiText, fobj):
+# Function to replace possible Entity references
+def clean(text):
+	text = text.replace('&',"&amp;")
+	text = text.replace('<',"&lt;")
+	text = text.replace('>',"&gt;")
+	text = text.replace('"',"&quot;")
+	text = text.replace("'","&apos;")
+	return text
+
+# Function to generate XML content that uses title and rendered data from render.py
+def writePage(page_id, title, wikiText, fobj):
 	global user_id, username
 
 	pglen = len(wikiText)
@@ -67,7 +76,7 @@ def writePage(title, wikiText, fobj):
 	
 	curPage ='''\n\n
 	<page>
-		<title>''' +title +'''</title>
+		<title>''' +clean(title) +'''</title>
 		<ns>0</ns>
 		<id>''' +str(page_id) +'''</id>
 		<revision>
@@ -81,7 +90,7 @@ def writePage(title, wikiText, fobj):
 			<model>wikitext</model>
 			<format>text/x-wiki</format>
 			<text xml:space="preserve" bytes="''' +str(pglen) +'''">
-			\n''' +wikiText +'''
+			\n''' + clean(wikiText) +'''
 			</text>
 			<sha1>''' +sha36(page_id) +'''</sha1>
 		</revision>

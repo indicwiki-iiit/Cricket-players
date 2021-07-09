@@ -14,7 +14,8 @@ with open('../data_collection/data/final_cricket_players_translated_dataset_with
     ids = [52910, 10696, 47478, 52672, 665053, 5692, 44024, 51487, 318845, 53116, 5390, 277906, 267192, 54545, 55150, 769517, 53448, 215501, 275487, 54273]
     # ids = [28081]
     # change below file_name to cricket_players.txt to store rendered output in txt file like previously done
-    file_name = 'cricket_players_(20).xml'
+    current_page_id = 900000
+    file_name = 'cricket_players_20.xml'
     with open(file_name, 'w') as fobj:
         # for xml file, uncomment below line
         fobj.write(tewiki + '\n')
@@ -48,6 +49,7 @@ with open('../data_collection/data/final_cricket_players_translated_dataset_with
             
             # uncomment below code (if commented) for generating xml file
             row = cricket_players_DF.loc[cricket_players_DF['Cricinfo_id']==_id]
-            writePage(row.Player_Name.values[0], template_string, fobj)
+            writePage(current_page_id, row.Player_Name.values[0], template_string, fobj)
+            current_page_id += 1
         fobj.write('</mediawiki>')
         
