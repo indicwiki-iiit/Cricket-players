@@ -1,45 +1,62 @@
+# This file results the Infobox and Overview section telugu text of the player.
 import pandas as pd
 import ast
 import pickle
 from jinja2 import Environment, FileSystemLoader
 
+# This function checks whether the given input is a valid one(Not nan)
 def is_valid_string(attribute_value):
     if not isinstance(attribute_value, str) and not isinstance(attribute_value, float) and not isinstance(attribute_value, type(None)):
         return True
     return not (attribute_value == None or pd.isnull(attribute_value) or str(attribute_value) == "" or str(attribute_value) == "nan")
 
+# Returns the date from the list
+# List is in the format [year,date,opponent team]
 def date(row):
     if not is_valid_string(row):
         return 'nan'
     row = ast.literal_eval(row)
     return row[1]
+
+
+# Converts the height into int
 def height(row):
     if not is_valid_string(row):
         return 'nan'
     row = int(row)
     return row
 
+
+# Returns the crininfo url of the player as a string
 def get_source(profile_ref, player_name):
     return profile_ref + " " + player_name + " ప్రొఫైల్"
 
 
+# Returns the crininfo url of the player as a reference in tewiki.
 def get_profile_ref(profile_ref, player_name):
     if len(profile_ref) == 0:
         return ''
     return " <ref>[" + profile_ref + " " + player_name + " ప్రొఫైల్]</ref>"
 
+
+# Returns the year from the list
+# List is in the format [year,date,opponent team]
 def year(row):
     if not is_valid_string(row):
         return 'nan'
     row = ast.literal_eval(row)
     return row[0]
 
+
+# Returns the opponent team from the list
+# List is in the format [year,date,opponent team]
 def against(row):
     if not is_valid_string(row):
         return 'nan'
     row = ast.literal_eval(row)
     return row[-1]
 
+# This function concates birth date of the player which is in the form of list into a string
 def concate_birth(date):
     if len(date) == 1:
         return date[0]
@@ -48,10 +65,12 @@ def concate_birth(date):
     else:
         li = ','.join(date)
         return li.rstrip()
+
+# This function converts string list into list
 def conv(t):
     t = ast.literal_eval(t)
     return t
-
+# Returns a dict which contains the required information to render the jinja template
 def getData(row):
     birth_date = row['Telugu_Birth_Date'].values[0]
     birth_overview = row['Telugu_Birth_Date'].values[0]
@@ -117,7 +136,7 @@ def getData(row):
 cricket_players_DF = pd.DataFrame()
 with open('../data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:
     cricket_players_DF = pickle.load(f)
-    
+# Takes player crininfo id as argument and returns corresponding template string associated with infobox and overview section.
 def main1(_id):
     file_loader = FileSystemLoader('./')
     env = Environment(loader=file_loader)
