@@ -141,11 +141,9 @@
 
 == పురస్కారాలు,  క్రీడా గౌరవాలు ==  
 
-{%- set line1 = [player_name,' ఈ క్రింది అవార్డులు ',word3] |join('') %}
-{%- set line2 = ['ఈ క్రింది అవార్డులు ',player_name,' ',word4] |join('') %}
-{%- set line3 = [player_name,' దక్కించుకున్న అవార్డులు'] |join('') %}
+{%- set line1 = [player_name,' ఈ క్రింది అవార్డుల గ్రహీత '] |join('') %}
 
-{{ [line1, line2, line3] | random }}: <ref>[https://www.kaggle.com/raghav333/espn-cricket-players-data {{player_name}} పురస్కారాలు]</ref>
+{{ line1 }}: <ref>[https://www.kaggle.com/raghav333/espn-cricket-players-data {{player_name}} పురస్కారాలు]</ref>
 
 <div style="overflow-y: scroll; overflow-x: hidden; max-height :40em;">
 
