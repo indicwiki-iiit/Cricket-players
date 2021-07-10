@@ -49,7 +49,7 @@ with open('../data_collection/data/final_cricket_players_translated_dataset_with
             
             # uncomment below code (if commented) for generating xml file
             row = cricket_players_DF.loc[cricket_players_DF['Cricinfo_id']==_id]
-            writePage(current_page_id, row.Player_Name.values[0], template_string, fobj)
+            writePage(current_page_id, row.Player_Name_Telugu.values[0], template_string, fobj)
             current_page_id += 1
         fobj.write('</mediawiki>')
         
