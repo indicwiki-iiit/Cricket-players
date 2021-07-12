@@ -1,13 +1,15 @@
 import pickle
 import pandas
 from genXML import tewiki, writePage
+import sys
+sys.path.append('./final_templates')
 from render_info import main1
 from render_personal_life_and_statistics import main2, main4
 from render_life import main3
 from render_records import main5
 from render_categories import main6
 
-with open('../data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:    
+with open('./data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:    
     cricket_players_DF = pickle.load(f)
     # ids = cricket_players_DF.Cricinfo_id.tolist()
     # ids for 20 cricketers chosen
@@ -15,7 +17,7 @@ with open('../data_collection/data/final_cricket_players_translated_dataset_with
     # ids = [28081]
     # change below file_name to cricket_players.txt to store rendered output in txt file like previously done
     current_page_id = 900000
-    file_name = '../cricket_players_20.xml'
+    file_name = 'cricket_players_20.xml'
     with open(file_name, 'w') as fobj:
         # for xml file, uncomment below line
         fobj.write(tewiki + '\n')

@@ -65,7 +65,7 @@ def get_matches_ref(matches_ref, player_name):
 	return "<ref>[" + required_ref[0] + " " + player_name + " రికార్డులు]</ref>"
 
 cricketDF = pd.DataFrame()
-with open('../data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:
+with open('./data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:
     cricketDF = pickle.load(f)
     cricketDF.fillna(value="nan", inplace=True)
 
@@ -73,7 +73,7 @@ with open('../data_collection/data/final_cricket_players_translated_dataset_with
 def main5(_id):
 	file_loader = FileSystemLoader('./')
 	env = Environment(loader=file_loader)
-	template = env.get_template('records.j2')
+	template = env.get_template('./final_templates/records.j2')
 
 	func_dict = {
 		"get_matches_ref": get_matches_ref

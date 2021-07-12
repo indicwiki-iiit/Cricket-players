@@ -193,7 +193,7 @@ func_dict = {
 
 
 a = pd.DataFrame()
-with open('../data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:
+with open('./data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:
     a = pickle.load(f)
 
 def render(_id, template):
@@ -209,7 +209,7 @@ def render(_id, template):
     return template_string
 
 def main2(_id):
-    return render(_id, template="personal_life.j2")
+    return render(_id, template="./final_templates/personal_life.j2")
 
 def main4(_id):
-    return render(_id, template="player_statistical_analysis.j2")
+    return render(_id, template="./final_templates/player_statistical_analysis.j2")

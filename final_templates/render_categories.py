@@ -167,7 +167,7 @@ def getData(row):
 
 # Loads dataset
 cricket_players_DF = pd.DataFrame()
-with open('../data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:
+with open('./data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:
     cricket_players_DF = pickle.load(f)
     cricket_players_DF.fillna(value="nan", inplace=True)
 
@@ -176,7 +176,7 @@ def main6(_id):
     global all_attributes
     file_loader = FileSystemLoader('./')
     env = Environment(loader=file_loader)
-    template = env.get_template('categories.j2')
+    template = env.get_template('./final_templates/categories.j2')
     
     func_dict = {        
         "get_country_player": get_country_player,

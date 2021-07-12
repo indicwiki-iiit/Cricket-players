@@ -134,13 +134,13 @@ def getData(row):
     return data
 
 cricket_players_DF = pd.DataFrame()
-with open('../data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:
+with open('./data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:
     cricket_players_DF = pickle.load(f)
-# Takes player crininfo id as argument and returns corresponding template string associated with infobox and overview section.
+# Takes player cricinfo id as argument and returns corresponding template string associated with infobox and overview section.
 def main1(_id):
     file_loader = FileSystemLoader('./')
     env = Environment(loader=file_loader)
-    template = env.get_template('info.j2')
+    template = env.get_template('./final_templates/info.j2')
     glob = {'get_profile_ref': get_profile_ref, 'get_source': get_source, 'conv': conv}
     template.globals.update(glob)
     cricket_players_DF.fillna(value="nan", inplace=True)

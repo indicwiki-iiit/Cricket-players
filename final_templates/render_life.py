@@ -773,7 +773,7 @@ def getData(row):
     return data
 
 cricket_players_DF = pd.DataFrame()
-with open('../data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:
+with open('./data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:
     cricket_players_DF = pickle.load(f)
     cricket_players_DF.fillna(value="nan", inplace=True)
     all_attributes = cricket_players_DF.columns.tolist()
@@ -783,7 +783,7 @@ def main3(_id):
     global all_attributes
     file_loader = FileSystemLoader('./')
     env = Environment(loader=file_loader)
-    template = env.get_template('life.j2')
+    template = env.get_template('./final_templates/life.j2')
 
     func_dict = {
         "stat_value": stat_value,
