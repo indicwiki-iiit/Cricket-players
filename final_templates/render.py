@@ -15,7 +15,7 @@ with open('../data_collection/data/final_cricket_players_translated_dataset_with
     # ids = [28081]
     # change below file_name to cricket_players.txt to store rendered output in txt file like previously done
     current_page_id = 900000
-    file_name = 'cricket_players_20.xml'
+    file_name = '../cricket_players_20.xml'
     with open(file_name, 'w') as fobj:
         # for xml file, uncomment below line
         fobj.write(tewiki + '\n')
