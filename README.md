@@ -53,7 +53,7 @@ requirements.txt comes along with the Project Directory.
 
 #### data\_cleaning
 
-> Github folder Link: https://github.com/indicwiki-iiit/Cricket-players/tree/main/data/data\_cleaning
+> Github folder Link: https://github.com/indicwiki-iiit/Cricket-players/tree/main/data/data_cleaning
 - This folder contains the complete implementation for data cleaning.
     - _initial\_cleaning.py_ -> This file contains implementation which performs an initial level data cleaning based on defects observed in sweetviz report.
     - _symbol\_replacement.py_ -> This file contains implementation which performs a secondary level data cleaning based on defects observed on dataset obtained after initial cleaning.
@@ -102,7 +102,7 @@ requirements.txt comes along with the Project Directory.
 
 ### translating\_data
 
-> Github folder Link: https://github.com/indicwiki-iiit/Cricket-players/tree/main/translating\_data
+> Github folder Link: https://github.com/indicwiki-iiit/Cricket-players/tree/main/translating_data
 - This folder contains the implementation for obtaining and storing a translated (and transliterated) dataset, to save overhead of translation libraries while generating articles via XML file. It also contains the intermediate datasets obtained in the process.
     - _awards.csv_ -> This file contains dataset corresponding to translated values for awards attribute.
     - _cricket\_players\_records.xlsx_ -> This file contains dataset corresponding to translated values for records attributes (with excel translation - which didn't produce desirable output).
@@ -115,7 +115,7 @@ requirements.txt comes along with the Project Directory.
 
 ### Report
 
-You can find the detailed report [here](https://github.com/indicwiki-iiit/Cricket-players/blob/main/Cricket\_Players\_Domain-Interns\_report)
+You can find the detailed report [here](https://github.com/indicwiki-iiit/Cricket-players/blob/main/Cricket_Players_Domain-Interns_report)
 
 ### Sample Article
 
@@ -123,12 +123,12 @@ You can find the sample article [here](https://github.com/indicwiki-iiit/Cricket
 
 ### cricket\_players.xml
 
-> Github file Link: https://github.com/indicwiki-iiit/Cricket-players/tree/main/cricket\_players.xml
+> Github file Link: https://github.com/indicwiki-iiit/Cricket-players/tree/main/cricket_players.xml
 - This file contains the XML dump which consists of articles of all the 10k players, whose data has been collected.
 
 ### duplicates\_to\_consider.json
 
-> Github file Link: https://github.com/indicwiki-iiit/Cricket-players/tree/main/duplicates\_to\_consider.json
+> Github file Link: https://github.com/indicwiki-iiit/Cricket-players/tree/main/duplicates_to_consider.json
 - This file contains a dictionary regarding which players are to be considered when duplicate names are encountered.
 
 ### genXML.py
