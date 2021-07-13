@@ -115,7 +115,7 @@ requirements.txt comes along with the Project Directory.
 
 ### Report
 
-You can find the detailed report [here](https://github.com/indicwiki-iiit/Cricket-players/blob/main/Cricket_Players_Domain-Interns_report)
+You can find the detailed report [here](https://github.com/indicwiki-iiit/Cricket-players/blob/main/Cricket_Players_Domain-Interns_report.pdf)
 
 ### Sample Article
 
