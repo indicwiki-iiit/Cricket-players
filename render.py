@@ -1,15 +1,20 @@
 import pickle
+import json
 import pandas
 from genXML import tewiki, writePage
 import sys
-sys.path.append('./final_templates')
+sys.path.append('./templates')
 from render_info import main1
 from render_personal_life_and_statistics import main2, main4
 from render_life import main3
 from render_records import main5
 from render_categories import main6
 
-with open('./data_collection/data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:    
+duplicates_to_consider = {}
+with open('duplicates_to_consider.json', 'r') as f:
+    duplicates_to_consider = json.load(f)
+
+with open('./data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:    
     cricket_players_DF = pickle.load(f)
     # ids = cricket_players_DF.Cricinfo_id.tolist()
     # ids for 20 cricketers chosen
@@ -25,6 +30,10 @@ with open('./data_collection/data/final_cricket_players_translated_dataset_with_
             if i % 100 == 0:
                 print(f'{i} players done')
             s = '\n\n'
+            row = cricket_players_DF.loc[cricket_players_DF['Cricinfo_id']==_id]
+            player_full_name = row['Full Name'].values[0]
+            if player_full_name in duplicates_to_consider.keys() and int(_id) != int(duplicates_to_consider[player_full_name]):
+                continue
             player_infobox_and_overview = main1(_id)
             player_infobox_and_overview = player_infobox_and_overview.rstrip().lstrip()
             player_personal_life = main2(_id)
@@ -50,8 +59,7 @@ with open('./data_collection/data/final_cricket_players_translated_dataset_with_
             # fobj.write(s) 
             
             # uncomment below code (if commented) for generating xml file
-            row = cricket_players_DF.loc[cricket_players_DF['Cricinfo_id']==_id]
-            writePage(current_page_id, row.Player_Name_Telugu.values[0], template_string, fobj)
+            writePage(current_page_id, row.Full_Name_Telugu.values[0], template_string, fobj)
             current_page_id += 1
         fobj.write('</mediawiki>')
         
