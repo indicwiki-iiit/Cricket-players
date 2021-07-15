@@ -1,3 +1,4 @@
+# Generates XML dump for required articles (based on cricket player ids provided as parameters)
 import pickle
 import json
 import pandas
@@ -10,56 +11,47 @@ from render_life import main3
 from render_records import main5
 from render_categories import main6
 
+# Handling edge cases of duplicate titles in XML dump
 duplicates_to_consider = {}
 with open('duplicates_to_consider.json', 'r') as f:
     duplicates_to_consider = json.load(f)
 
 with open('./data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:    
     cricket_players_DF = pickle.load(f)
-    # ids = cricket_players_DF.Cricinfo_id.tolist()
-    # ids for 20 cricketers chosen
-    ids = [52910, 10696, 47478, 52672, 665053, 5692, 44024, 51487, 318845, 53116, 5390, 277906, 267192, 54545, 55150, 769517, 53448, 215501, 275487, 54273]
-    # ids = [28081]
-    # change below file_name to cricket_players.txt to store rendered output in txt file like previously done
+    # Complete list of cricinfo-ids of required cricket player articles (update here based on necessity)
+    all_ids = cricket_players_DF.Cricinfo_id.tolist()
+    # Split of above list of all ids for obeying constraints of xml file size (update here based on necessity)
+    split_ids = [all_ids[:5000], all_ids[5000:]]
+    # Xml file names for each corresponding split mentioned above - should have same number of elements as split_ids array (update here based on necessity)
+    file_names = [f'cricket_players(part-{i}).xml' for i in range(1, 3)]
     current_page_id = 900000
-    file_name = 'cricket_players_20.xml'
-    with open(file_name, 'w') as fobj:
-        # for xml file, uncomment below line
-        fobj.write(tewiki + '\n')
-        for i, _id in enumerate(ids):
-            if i % 100 == 0:
-                print(f'{i} players done')
-            s = '\n\n'
-            row = cricket_players_DF.loc[cricket_players_DF['Cricinfo_id']==_id]
-            player_full_name = row['Full Name'].values[0]
-            if player_full_name in duplicates_to_consider.keys() and int(_id) != int(duplicates_to_consider[player_full_name]):
-                continue
-            player_infobox_and_overview = main1(_id)
-            player_infobox_and_overview = player_infobox_and_overview.rstrip().lstrip()
-            player_personal_life = main2(_id)
-            player_personal_life = player_personal_life.rstrip().lstrip()
-            player_professional_life = main3(_id)
-            player_professional_life = player_professional_life.rstrip().lstrip()
-            player_statistics = main4(_id)
-            player_statistics = player_statistics.rstrip().lstrip()
-            player_records_awards_references = main5(_id)
-            player_records_awards_references = player_records_awards_references.rstrip().lstrip()
-            player_categories = main6(_id)
-            player_categories = player_categories.rstrip().lstrip()
-            template_string = player_infobox_and_overview + s + player_personal_life + s + player_professional_life + s + player_statistics + s + player_records_awards_references + s + player_categories + s
-            
-            # uncomment below code (if commented) for storing in a txt file, where each article is separated by 160 hyphens and has player id on top for each article
-            # fobj.write('-'*160)
-            # fobj.write(s)
-            # fobj.write(str(_id))
-            # fobj.write(s)
-            # fobj.write(template_string)
-            # fobj.write(s)
-            # fobj.write('-'*160)
-            # fobj.write(s) 
-            
-            # uncomment below code (if commented) for generating xml file
-            writePage(current_page_id, row.Full_Name_Telugu.values[0], template_string, fobj)
-            current_page_id += 1
-        fobj.write('</mediawiki>')
+    for k in range(len(file_names)):
+        file_name = file_names[k]
+        ids = split_ids[k]
+        with open(file_name, 'w') as fobj:
+            fobj.write(tewiki + '\n')
+            for i, _id in enumerate(ids):
+                if i % 100 == 0:
+                    print(f'Part-{k+1}: {i} players done')
+                s = '\n\n'
+                row = cricket_players_DF.loc[cricket_players_DF['Cricinfo_id']==_id]
+                player_full_name = row['Full Name'].values[0]
+                if player_full_name in duplicates_to_consider.keys() and int(_id) != int(duplicates_to_consider[player_full_name]):
+                    continue
+                player_infobox_and_overview = main1(_id)
+                player_infobox_and_overview = player_infobox_and_overview.rstrip().lstrip()
+                player_personal_life = main2(_id)
+                player_personal_life = player_personal_life.rstrip().lstrip()
+                player_professional_life = main3(_id)
+                player_professional_life = player_professional_life.rstrip().lstrip()
+                player_statistics = main4(_id)
+                player_statistics = player_statistics.rstrip().lstrip()
+                player_records_awards_references = main5(_id)
+                player_records_awards_references = player_records_awards_references.rstrip().lstrip()
+                player_categories = main6(_id)
+                player_categories = player_categories.rstrip().lstrip()
+                template_string = player_infobox_and_overview + s + player_personal_life + s + player_professional_life + s + player_statistics + s + player_records_awards_references + s + player_categories + s        
+                writePage(current_page_id, row.Full_Name_Telugu.values[0], template_string, fobj)
+                current_page_id += 1
+            fobj.write('</mediawiki>')
         

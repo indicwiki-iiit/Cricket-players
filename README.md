@@ -27,18 +27,8 @@ requirements.txt comes along with the Project Directory.
 
 - Clone the repository into the local system.
 - For generating articles, one needs the folders: data, templates; and files: render.py, genXML.py. Ensure that these files and folders are available.
-- In the file 'render.py', update the `ids` list such that it contains all the cricinfo IDs of the required players.
-
-### Generating XML dump
-
-- Follow the comments of 'render.py' and uncomment necessary lines to generate XML dump.
-- Execute 'render.py' with the command: `python3.7 render.py`. This will generate the XML dump for given player ids list, and store them in the xml file 'cricket\_players.xml'.
-
-### Generating individual articles and storing in a text file
-
-- Follow the comments of 'render.py' and uncomment necessary lines to generate articles for different ids, in a txt file. Update the file name variable to 'cricket\_players.txt'.
-- Execute 'render.py' with the command: `python3.7 render.py`. This will generate the required articles for given player ids list, and store them in a txt file 'cricket\_players.txt'. Each player's article has the corresponding player's cricinfo id at the beginning, and each such articles are distinguished by dotted lines (at the beginning and end of article) in the txt file.
-
+- In the file 'render.py', update the `all_ids` list such that it contains all the cricinfo IDs of the required players. Also update the lists `split_ids` and `file_names` based on requirements if necessary (their purpose has been clearly described in comments). 
+- Execute 'render.py' with the command: `python3.7 render.py`. This will generate the XML dump for given player ids list, and store them in different corresponding xml files, as mentioned in `file_names` list (described in comments in render file).
 
 ## Github Structure
 
@@ -49,6 +39,7 @@ requirements.txt comes along with the Project Directory.
     - _final\_cricket\_players\_translated\_dataset\_with\_images.csv_ -> This is the csv format of the final version of the dataset obtained after merging, cleaning and translation/transliteration.
     - _final\_cricket\_players\_translated\_dataset\_with\_images.pkl_ -> This is the pickle file of the final version of the dataset obtained after merging, cleaning and translation/transliteration.
     - _final\_cricket\_players\_translated\_dataset\_with\_images.xlsx_ -> This is the xlsx format of the final version of the dataset obtained after merging, cleaning and translation/transliteration.
+    - _generate\_report.py_ -> This script generates sweetviz report for dataset - for detailed analysis.
     - _SWEETVIZ\_REPORT.html_ -> This is a brief report of the dataset, generated using sweetviz library, for better analysis of data.
 
 #### data\_cleaning
@@ -121,10 +112,15 @@ You can find the detailed report [here](https://github.com/indicwiki-iiit/Cricke
 
 You can find the sample article [here](https://github.com/indicwiki-iiit/Cricket-players/blob/main/Cricket%20Players%20-%20Sample%20Article.pdf)
 
-### cricket\_players.xml
+### cricket\_players(part-1).xml
 
-> Github file Link: https://github.com/indicwiki-iiit/Cricket-players/tree/main/cricket_players.xml
-- This file contains the XML dump which consists of articles of all the 10k players, whose data has been collected.
+> Github file Link: https://github.com/indicwiki-iiit/Cricket-players/tree/main/cricket_players(part-1).xml
+- This file contains the XML dump which consists of articles of the first 5000 players (first 5000 of a total of 9953 players), whose data has been collected.
+
+### cricket\_players(part-2).xml
+
+> Github file Link: https://github.com/indicwiki-iiit/Cricket-players/tree/main/cricket_players(part-2).xml
+- This file contains the XML dump which consists of articles of the last 5k (approx) players (last 4953 of a total of 9953 players), whose data has been collected.
 
 ### duplicates\_to\_consider.json
 
@@ -139,7 +135,7 @@ You can find the sample article [here](https://github.com/indicwiki-iiit/Cricket
 ### render.py
 
 > Github file Link: https://github.com/indicwiki-iiit/Cricket-players/tree/main/render.py
-- This is the code used for rendering the cricket player articles using jinja2 templates from templates folder.
+- This is the code used for rendering the cricket player articles using jinja2 templates from templates folder. It generates XML dump based on parameters provided in implementation (as described in comments of the file).
 
 ### requirements.txt:
 
