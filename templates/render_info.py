@@ -11,12 +11,21 @@ def is_valid_string(attribute_value):
         return True
     return not (attribute_value == None or pd.isnull(attribute_value) or str(attribute_value) == "" or str(attribute_value) == "nan")
 
+# Evaluates given entity
+def get_literal(q):
+    try:
+        return ast.literal_eval(q)
+    except:
+        return 'nan'
+    
 # Returns the date from the list
 # List is in the format [year,date,opponent team]
 def date(row):
     if not is_valid_string(row):
         return 'nan'
-    row = ast.literal_eval(row)
+    row = get_literal(row)
+    if row == 'nan':
+        return row
     return row[1]
 
 
@@ -45,7 +54,9 @@ def get_profile_ref(profile_ref, player_name):
 def year(row):
     if not is_valid_string(row):
         return 'nan'
-    row = ast.literal_eval(row)
+    row = get_literal(row)
+    if row == 'nan':
+        return row
     return row[0]
 
 
@@ -54,7 +65,9 @@ def year(row):
 def against(row):
     if not is_valid_string(row):
         return 'nan'
-    row = ast.literal_eval(row)
+    row = get_literal(row)
+    if row == 'nan':
+        return row
     return row[-1]
 
 # This function concates birth date of the player which is in the form of list into a string
@@ -69,20 +82,28 @@ def concate_birth(date):
 
 # This function converts string list into list
 def conv(t):
-    t = ast.literal_eval(t)
+    t = get_literal(t)
     return t
 # Returns a dict which contains the required information to render the jinja template
 def getData(row):
     birth_date = row['Telugu_Birth_Date'].values[0]
+    if not isinstance(birth_date, str):
+        birth_date = '-1'
     birth_overview = row['Telugu_Birth_Date'].values[0]
+    if not isinstance(birth_overview, str):
+        birth_overview = '-1'
     if birth_date != '-1':
-        birth_date = ast.literal_eval(row['Telugu_Birth_Date'].values[0])
-        birth_date = concate_birth(birth_date)
-        birth_overview = birth_date.split(",")
-        if len(birth_overview) == 2:
-            if birth_overview[0].find('0') != -1:
-                birth_overview[0] = birth_overview[0].replace('0', '')
-    profile_ref = ast.literal_eval(row['References'].values[0])
+        birth_date = get_literal(row['Telugu_Birth_Date'].values[0])
+        if birth_date != 'nan':
+            birth_date = concate_birth(birth_date)
+            birth_overview = birth_date.split(",")
+            if len(birth_overview) == 2:
+                if birth_overview[0].find('0') != -1:
+                    birth_overview[0] = birth_overview[0].replace('0', '')
+    pr = get_literal(row['References'].values[0])
+    profile_ref = 'nan'
+    if pr != 'nan':
+        profile_ref = pr[0]
     AWARDS = row["awards_telugu"].values[0]
     if AWARDS != 'nan':
         AWARDS = AWARDS.split(',, ')
@@ -128,7 +149,7 @@ def getData(row):
         'lastT20Iagainst': against(row['T20I_info_Matches_last_appearance_telugu'].values[0]),
         'Major_trophies': row['trophy_names_Telugu'].values[0],
         "AWARDS": AWARDS,
-        'profile_ref': profile_ref[0]
+        'profile_ref': profile_ref
 
 
     }
@@ -142,7 +163,7 @@ def main1(_id):
     file_loader = FileSystemLoader('./')
     env = Environment(loader=file_loader)
     template = env.get_template('./templates/info.j2')
-    glob = {'get_profile_ref': get_profile_ref, 'get_source': get_source, 'conv': conv}
+    glob = {'get_profile_ref': get_profile_ref, 'get_source': get_source, 'conv': conv, 'is_valid_string': is_valid_string}
     template.globals.update(glob)
     cricket_players_DF.fillna(value="nan", inplace=True)
     row = cricket_players_DF.loc[cricket_players_DF['Cricinfo_id'] == _id]

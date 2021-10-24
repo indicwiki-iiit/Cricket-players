@@ -5,6 +5,13 @@ from jinja2 import Environment, FileSystemLoader
 import pandas as pd
 import ast
 
+# Evaluates given entity
+def get_literal(q):
+    try:
+        return ast.literal_eval(q)
+    except:
+        return '[]'
+    
 def getData(row):
 	# Translation/Transliteration of records, references and awards of a player's row
 	player_name = row.Player_Name_Telugu.values[0]
@@ -13,34 +20,34 @@ def getData(row):
 	odi_records = row.odi_records_telugu.values[0]
 	t20i_records = row.t20i_records_telugu.values[0]
 	gender = row.Gender.values[0]
-	references = ast.literal_eval(row.References.values[0])
+	references = get_literal(row.References.values[0])
 	awards = str(row.awards_telugu.values[0])
 
 	if(all_records !='[]'):
 		try:
-			all_records = ast.literal_eval(all_records)
+			all_records = get_literal(all_records)
 		except:
-			all_records = ast.literal_eval(row.records.values[0])
+			all_records = get_literal(row.records.values[0])
 	if(test_records != '[]'):
 		try:
-			test_records = ast.literal_eval(test_records)
+			test_records = get_literal(test_records)
 		except:
-			test_records = ast.literal_eval(row.test_records.values[0])
+			test_records = get_literal(row.test_records.values[0])
 	if(odi_records != '[]'):
 		try:
-			odi_records = ast.literal_eval(odi_records)
+			odi_records = get_literal(odi_records)
 		except:
-			odi_records = ast.literal_eval(row.odi_records.values[0])	
+			odi_records = get_literal(row.odi_records.values[0])	
 	if(t20i_records != '[]'):
 		try:
-			t20i_records = ast.literal_eval(t20i_records)
+			t20i_records = get_literal(t20i_records)
 		except:
-			t20i_records = ast.literal_eval(row.t20i_records.values[0])
+			t20i_records = get_literal(row.t20i_records.values[0])
 	if(awards != 'nan'):
 		try:
 			awards = awards.split(',, ')
 		except:
-			awards = ast.literal_eval(row.AWARDS.values[0])
+			awards = get_literal(row.AWARDS.values[0])
 
 	# Data dictionary 
 	data = {
@@ -59,10 +66,12 @@ def getData(row):
 
 # Returns a url corresponding to details related to given player's records
 def get_matches_ref(matches_ref, player_name):
-	required_ref = [r for r in matches_ref if "records" in r]
-	if len(required_ref) == 0:
-		return ''
-	return "<ref>[" + required_ref[0] + " " + player_name + " రికార్డులు]</ref>"
+    if matches_ref == 'nan':
+        return ''
+    required_ref = [r for r in matches_ref if "records" in r]
+    if len(required_ref) == 0:
+        return ''
+    return "<ref>[" + required_ref[0] + " " + player_name + " రికార్డులు]</ref>"
 
 cricketDF = pd.DataFrame()
 with open('./data/final_cricket_players_translated_dataset_with_images.pkl', 'rb') as f:

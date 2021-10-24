@@ -23,6 +23,13 @@ def is_valid_string(attribute_value):
         return True
     return not (attribute_value == None or pd.isnull(attribute_value) or str(attribute_value) == "" or str(attribute_value) == "nan")
 
+# Evaluates given entity
+def get_literal(q):
+    try:
+        return ast.literal_eval(q)
+    except:
+        return 'nan'
+
 # Obtain transliterated output for a given input sentence, based on online libraries
 def getTransliteratedDescription(description):
     try:
@@ -98,7 +105,7 @@ def get_trophy_info(row):
     global all_attributes
     if not is_valid_string(row['Major_Trophies']):
         return [], [], {}
-    all_trophies = ast.literal_eval(row['Major_Trophies'])
+    all_trophies = get_literal(row['Major_Trophies'])
     if len(all_trophies) == 0:
         return [], [], {}
     trophy_names = [name for name in all_trophies.keys()
@@ -224,7 +231,7 @@ def get_debut_string(deb):
 def get_teams_string(teams_list):
     if not is_valid_string(teams_list):
         return ''
-    actual_list = ast.literal_eval(teams_list)
+    actual_list = get_literal(teams_list)
     capitals = {
         'Super 3s': 'సూపర్ ౩స్', 'SC': 'ఎస్.సీ.', 'Glamorgan 2nd': 'గ్లమోర్గన్ 2న్ద్', 
         'HBS': 'హెచ్.బీ.ఎస్.', 'BCCSL': 'బీ.సీ.సీ.ఎస్.ఎల్.', 'Leicestershire 2nd': 'లీసెస్టర్షైర్ 2న్ద్', 
@@ -283,7 +290,7 @@ def get_teams_string(teams_list):
             translated_output = getTranslatedDescription(actual_list)
             if ']]' in translated_output:
                 translated_output = translated_output.replace(']]', ']')
-            actual_list = list(ast.literal_eval(translated_output))
+            actual_list = list(get_literal(translated_output))
             return ', '.join(actual_list)
         except Exception as f:
             print("Level 3", f)

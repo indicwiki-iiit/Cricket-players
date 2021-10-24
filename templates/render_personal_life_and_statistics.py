@@ -6,6 +6,13 @@ import numpy as np
 import ast 
 import pickle
 
+# Evaluates given entity
+def get_literal(q):
+    try:
+        return ast.literal_eval(q)
+    except:
+        return 'nan'
+
 def translate(var):
     res = list()
     for i in range(len(var)):
@@ -33,18 +40,22 @@ def translate(var):
     return res
 #Return the data with the converted data type based upon the syntax tree evalution of the source variable. 
 def conv(t):
-    literal = ast.literal_eval(t)
+    literal = get_literal(t)
     return literal
 #Add interwiki link sytax to specific data. 
 def interwiki(li):
-    li = ast.literal_eval(li)
+    li = get_literal(li)
+    if li == 'nan':
+        return ''
     ret = ""
     for i in range(len(li)):
         ret = ret + "[[" + transliterate_text(li[i],lang_code="te") + "]],"  
     return ret
 #Add interwiki link sytax to string which contain date as a part of it. 
 def inter_wiki_date(li):
-    li = ast.literal_eval(li)
+    li = get_literal(li)
+    if li == 'nan':
+        return "-1"
     ret = ""
     for i in range(len(li)):
         ret = ret + "[[" + li[i] + "]],"
@@ -60,8 +71,9 @@ def list_str(val,check_year):
         pr = val
         return pr
     else:
-        
-        pr = ast.literal_eval(val)
+        pr = get_literal(val)
+        if pr == 'nan':
+            return pr
         p = (", ").join(pr)
         p = p.replace(", (","(")
         p = p.replace("( ","(")
@@ -129,7 +141,9 @@ def change_abbr(h):
     return n
 #To convert relations attribute and render them.
 def relation_print(li):
-    ret = ast.literal_eval(li)
+    ret = get_literal(li)
+    if ret == 'nan':
+        return ''
     s= ""
     for i in range(len(ret)):
         s = s + ret[i][0] + ret[i][1] + " "

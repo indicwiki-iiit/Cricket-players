@@ -137,7 +137,7 @@
 
 {%- macro function_awards(player_name, awards)  -%}
 
-	{%- if awards != 'nan' %}
+	{%- if awards != 'nan' and awards != '[]' %}
 
 == పురస్కారాలు,  క్రీడా గౌరవాలు ==  
 
@@ -163,7 +163,7 @@
 
 {%- macro function_references(references)  -%}
  
-	{%- if references != 'nan' %}
+	{%- if references != 'nan' and references != '[]' %}
 
 == మూలాలు ==
 

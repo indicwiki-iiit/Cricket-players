@@ -35,7 +35,7 @@
     {%- if Playing_Role != "nan" %}
 	|role     =  {{Playing_Role}}
 	{%- endif %}
-	{%- if Relations != '[]' %}
+    {%- if Relations != '[]' and conv(Relations) != 'nan' %}
 	|family	   = 
 	{%- set s = conv(Relations) -%}
             {%- for it in s -%}
@@ -101,7 +101,7 @@
 	{{- Full_Name -}}
 	{{- full_name_english -}}
 	{{- get_profile_ref(profile_ref,Player_Name) -}}
-    {%- if (Born_ov != '-1' and age != 'nan') -%}
+    {%- if (Born_ov != '-1' and age != 'nan' and Born_ov |string != 'nan') -%}
 		{%- if Born_ov|length == 2 -%}
 			{%-set line1 =  ['(జననం : [[',Born_ov[0],']],[[',Born_ov[1],']] , వయసు: ',age,')'] | join('')-%}
         {{[line1] | random}}  
@@ -109,7 +109,7 @@
 			{%-set line1 =  ['(జననం : [[',Born_ov[0],']], వయసు: ',age,')'] | join('')-%}
         	{{[line1] | random}}
 		{%- endif -%}
-    {%- elif (Born_ov != '-1' and age == 'nan') -%}
+    {%- elif (Born_ov != '-1' and age == 'nan' and is_valid_string(Born_ov)) -%}
     	{%- if Born_ov|length == 2 -%}
 			{%-set line1 =  ['(జననం : [[',Born_ov[0],']],[[',Born_ov[1],']])'] | join('')-%}
         	{{[line1] | random}}

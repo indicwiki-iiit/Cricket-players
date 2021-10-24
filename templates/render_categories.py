@@ -87,7 +87,10 @@ def get_nationality(nation):
 def get_year(given_date):
     if not is_valid_string(given_date):
         return -1
-    given_date = ast.literal_eval(given_date)
+    try:
+        given_date = ast.literal_eval(given_date)
+    except:
+        return -1
     if len(given_date) != 2:
         return -1
     try:

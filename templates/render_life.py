@@ -3,6 +3,7 @@
 import pickle
 import random
 import ast
+from datetime import datetime
 import pandas as pd
 from functools import cmp_to_key
 from jinja2 import Environment, FileSystemLoader
@@ -107,6 +108,13 @@ def is_valid_string(attribute_value):
     if not isinstance(attribute_value, str) and not isinstance(attribute_value, float) and not isinstance(attribute_value, type(None)):
         return True
     return not (attribute_value == None or pd.isnull(attribute_value) or str(attribute_value) == "" or str(attribute_value) == "nan")
+
+# Evaluates given entity
+def get_literal(q):
+    try:
+        return ast.literal_eval(q)
+    except:
+        return 'nan'
 
 # Returns translated trophy name
 def get_trophy_name(description):
@@ -387,7 +395,7 @@ def null_check(given_list, given_att):
 def can_be_considered_1(attributes, prop_name, row, curr_att):
     req_attrs = [a for a in attributes if '_' + prop_name + '_' in a]
     req_list = [a for a in req_attrs if (isinstance(row[a], str) and is_valid_string(row[a])) or (
-        (not isinstance(row[a], str)) and stat_value(a, row[a]) != "-" and stat_value(a, row[a]) > 0)]
+        (not isinstance(row[a], str)) and stat_value(a, row[a]) != "-" and ((isinstance(row[a], int) or isinstance(row[a], float)) and stat_value(a, row[a]) > 0))]
     valids_count = len(req_list)
     return valids_count != 0
 
@@ -396,7 +404,7 @@ def can_be_considered_2(attributes, prop_name, row, curr_att, other_list):
     req_attrs = [
         a for a in attributes if prop_name in a and null_check(other_list, a)]
     req_list = [a for a in req_attrs if (isinstance(row[a], str) and is_valid_string(row[a])) or (
-        (not isinstance(row[a], str)) and stat_value(a, row[a]) != "-" and stat_value(a, row[a]) > 0)]
+        (not isinstance(row[a], str)) and stat_value(a, row[a]) != "-" and ((isinstance(row[a], int) or isinstance(row[a], float)) and stat_value(a, row[a]) > 0))]
     valids_count = len(req_list)
     return valids_count != 0
 
@@ -501,8 +509,8 @@ def get_trophy_info(row):
     global all_attributes
     if not is_valid_string(row['Major_Trophies']) or row['Major_Trophies'] == None or pd.isnull(row['Major_Trophies']):
         return [], [], {}
-    all_trophies = ast.literal_eval(row['Major_Trophies'])
-    if len(all_trophies) == 0:
+    all_trophies = get_literal(row['Major_Trophies'])
+    if len(all_trophies) == 0 or all_trophies == 'nan':
         return [], [], {}
     trophy_names = [name for name in all_trophies.keys()
                     if len(all_trophies[name]) > 0]
@@ -765,7 +773,7 @@ def getData(row):
         'trophy_details': trophy_details,
 
         # References
-        'all_ref': ast.literal_eval(row['References'])
+        'all_ref': get_literal(row['References'])
     }
     # print(bowling_format_names)
     # print(bowling_stat_names)
